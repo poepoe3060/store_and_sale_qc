@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_quality_control_store,quality.control.store,model_quality_control_store,r_and_p_quality_control.group_qc_store,1,1,1,1
+access_quality_control_store_line,quality.control.store.line,model_quality_control_store_line,,1,1,1,1
+access_quality_control_sale,quality.control.sale,model_quality_control_sale,r_and_p_quality_control.group_qc_sale,1,1,1,1
+access_quality_control_sale_line,quality.control.sale.line,model_quality_control_sale_line,,1,1,1,1

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quality_control_store_form" model="ir.ui.view">
+        <field name="name">quality.control.store.form</field>
+        <field name="model">quality.control.store</field>
+        <field name="arch" type="xml">
+            <form string="Product Set">
+                <header>
+
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="purchase_order_id" options='{"no_quick_create": True "no_create": True}' domain="[('state', '=', 'purchase')]"/>
+                            <field name="receipt_id" options='{"no_quick_create": True "no_create": True}' domain="[('purchase_id', '=', purchase_order_id)]"/>
+                        </group>
+                        <group>
+                            <field name="schedule_date" />
+                            <field name="test_person_id" domain="[('is_store_employee', '=', True)]" options='{"no_quick_create": True "no_create": True}'/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Quality Control Lines">
+                            <field name="qc_line_ids">
+                                <list editable="bottom">
+                                    <field name="location_dest_id" />
+                                    <field name="product_id" />
+                                    <field name="quantity" />
+                                    <field name="complete_checked_qty" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="QC Note" name="note">
+                            <field name="qc_note" string="QC Note" placeholder="Add a quality control note."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_quality_control_store_tree" model="ir.ui.view">
+        <field name="name">quality.control.store.tree</field>
+        <field name="model">quality.control.store</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="schedule_date" />
+                <field name="purchase_order_id" />
+                <field name="receipt_id" />
+                <field name="test_person_id" />
+            </list>
+        </field>
+    </record>
+    <record id="action_quality_control_store" model="ir.actions.act_window">
+        <field name="name">Store Quality Control</field>
+        <field name="res_model">quality.control.store</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+        <menuitem id="menu_quality_control_store" name="Store QC"
+              action="action_quality_control_store"
+              parent="r_and_p_quality_control.menu_quality_control_root" />
+</odoo>

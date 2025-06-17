@@ -1,0 +1,15 @@
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_qc_store" model="res.groups">
+            <field name="name">QC Store Permission</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_qc_sale" model="res.groups">
+            <field name="name">QC Sale Permission</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

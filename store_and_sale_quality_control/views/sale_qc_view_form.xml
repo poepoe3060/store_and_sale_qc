@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quality_control_sale_form" model="ir.ui.view">
+        <field name="name">quality.control.sale.form</field>
+        <field name="model">quality.control.sale</field>
+        <field name="arch" type="xml">
+            <form string="Product Set">
+                <header>
+
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sale_order_id" options='{"no_quick_create": True "no_create": True}' domain="[('state', '=', 'sale')]"/>
+                            <field name="invoice_id"
+                               domain="[('id', 'in', invoice_domain_ids)]"
+                               options='{"no_quick_create": true, "no_create": true}'/>
+                        </group>
+                        <group>
+                            <field name="schedule_date" />
+                            <field name="test_person_id" domain="[('is_sale_person', '=', True)]" options='{"no_quick_create": True "no_create": True}'/>
+                        </group>
+                        <notebook>
+                        <page string="Quality Control Lines">
+                            <field name="qc_sale_line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id" />
+                                    <field name="quantity" />
+                                    <field name="already_checked" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="QC Note" name="note">
+                            <field name="qc_note" string="QC Note" placeholder="Add a quality control note."/>
+                        </page>
+                    </notebook>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_quality_control_sale_tree" model="ir.ui.view">
+        <field name="name">quality.control.sale.tree</field>
+        <field name="model">quality.control.sale</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="schedule_date" />
+                <field name="sale_order_id" />
+                <field name="invoice_id"/>
+                <field name="test_person_id" />
+            </list>
+        </field>
+    </record>
+    <record id="action_quality_control_sale" model="ir.actions.act_window">
+        <field name="name">Sale Quality Control</field>
+        <field name="res_model">quality.control.sale</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!--        menu items-->
+        <menuitem id="menu_quality_control_root" name="Quality Control" sequence="10" web_icon="r_and_p_quality_control,static/description/icon.png"/>
+        <menuitem id="menu_quality_control_sale" name="Sale QC"
+              action="action_quality_control_sale"
+              parent="r_and_p_quality_control.menu_quality_control_root" />
+</odoo>
