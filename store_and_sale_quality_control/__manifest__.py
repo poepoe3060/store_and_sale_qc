@@ -1,13 +1,13 @@
 
 {
-    'name': 'R&P Quality Control',
+    'name': 'Quality Control',
     'version': '1.1',
     'category': 'QC/QC',
     'summary': 'QC Management',
     'description': """
-    This module contains the qc management.
+    This module contains the quality control management.
     """,
-    'depends':  ['base','sale_internal', 'stock_internal','account'],
+    'depends':  ['base','sale', 'stock','account'],
     'data': [
         'security/quality_control_security.xml',
         'security/ir.model.access.csv',
