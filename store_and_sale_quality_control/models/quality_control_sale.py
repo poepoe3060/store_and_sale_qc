@@ -28,10 +28,11 @@ class QualityControlSale(models.Model):
                 ('state','=', 'posted'), ('move_type', '=', 'out_invoice')
             ])
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('quality.control.sale') or 'New'
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('quality.control.sale') or 'New'
         return super(QualityControlSale, self).create(vals)
 
     @api.onchange('sale_order_id')
@@ -55,6 +56,23 @@ class QualityControlSale(models.Model):
                 }))
         self.qc_sale_line_ids = lines
 
+    def write(self, values):
+        for rec in self:
+            changes = []
+            for field, val in values.items():
+                if field not in rec._fields:
+                    continue
+                old = rec[field]
+                new = val
+                if rec._fields[field].type == 'many2one':
+                    old = old.display_name if old else ''
+                    new = rec.env[rec._fields[field].comodel_name].browse(val).display_name if val else ''
+                if old != new:
+                    changes.append(f"{field}: {old} → {new}")
+            if changes:
+                rec.message_post(body="Updated Fields:" + "<br/>".join(changes), subtype_xmlid="mail.mt_note")
+        return super().write(values)
+
 
 class QualityControlSaleLines(models.Model):
     _name = "quality.control.sale.line"
@@ -64,5 +82,23 @@ class QualityControlSaleLines(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     quantity = fields.Float(string='Quantity')
     already_checked = fields.Boolean(string='Checked', required=True)
+
+    def write(self, vals):
+        for line in self:
+            changes = []
+            for field, val in vals.items():
+                if field not in line._fields:
+                    continue
+                old = line[field]
+                new = val
+                if line._fields[field].type == 'many2one':
+                    old = old.display_name if old else ''
+                    new = line.env[line._fields[field].comodel_name].browse(val).display_name if val else ''
+                if old != new:
+                    changes.append(f"{field}: {old} → {new}")
+            if changes and line.qc_sale_id:
+                message = "QC Line Updated:" + "<br/>".join(changes)
+                line.qc_sale_id.message_post(body=message, subtype_xmlid="mail.mt_note")
+        return super().write(vals)
 
 

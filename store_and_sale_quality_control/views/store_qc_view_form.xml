@@ -4,7 +4,7 @@
         <field name="name">quality.control.store.form</field>
         <field name="model">quality.control.store</field>
         <field name="arch" type="xml">
-            <form string="Product Set">
+            <form string="Store QC">
                 <header>
 
                 </header>
@@ -28,8 +28,9 @@
                         <page string="Quality Control Lines">
                             <field name="qc_line_ids">
                                 <list editable="bottom">
-                                    <field name="location_dest_id" />
-                                    <field name="product_id" />
+                                    <field name="location_dest_id" options='{"no_quick_create": True "no_create": True}'/>
+                                    <field name="product_id" options='{"no_quick_create": True "no_create": True}'/>
+                                    <field name="lot_serial" />
                                     <field name="quantity" />
                                     <field name="complete_checked_qty" />
                                 </list>

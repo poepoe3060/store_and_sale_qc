@@ -20,16 +20,34 @@ class QualityControlStore(models.Model):
     qc_note = fields.Text('QC Notes', tracking=True)
     test_person_id = fields.Many2one('hr.employee', string='Check Person', required=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('quality.control.store') or 'New'
-        return super(QualityControlStore, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('quality.control.store') or 'New'
+        return super().create(vals_list)
 
     @api.onchange('purchase_order_id')
     def _onchange_purchase_order_id(self):
         self.receipt_id = None
         self.qc_line_ids = [Command.clear()]
+
+    def write(self, values):
+        for rec in self:
+            changes = []
+            for field, val in values.items():
+                if field not in rec._fields:
+                    continue
+                old = rec[field]
+                new = val
+                if rec._fields[field].type == 'many2one':
+                    old = old.display_name if old else ''
+                    new = rec.env[rec._fields[field].comodel_name].browse(val).display_name if val else ''
+                if old != new:
+                    changes.append(f"{field}: {old} → {new}")
+            if changes:
+                rec.message_post(body="Updated Fields:" + "<br/>".join(changes), subtype_xmlid="mail.mt_note")
+        return super().write(values)
 
     @api.onchange('receipt_id')
     def _onchange_receipt_id(self):
@@ -74,3 +92,22 @@ class QualityControlStoreLines(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     quantity = fields.Float(string='Quantity')
     complete_checked_qty = fields.Float(string='Checked Qty')
+    lot_serial = fields.Char('Serial Numbers')
+
+    def write(self, vals):
+        for line in self:
+            changes = []
+            for field, val in vals.items():
+                if field not in line._fields:
+                    continue
+                old = line[field]
+                new = val
+                if line._fields[field].type == 'many2one':
+                    old = old.display_name if old else ''
+                    new = line.env[line._fields[field].comodel_name].browse(val).display_name if val else ''
+                if old != new:
+                    changes.append(f"{field}: {old} → {new}")
+            if changes and line.qc_store_id:
+                message = "QC Line Updated:" + "<br/>".join(changes)
+                line.qc_store_id.message_post(body=message, subtype_xmlid="mail.mt_note")
+        return super().write(vals)

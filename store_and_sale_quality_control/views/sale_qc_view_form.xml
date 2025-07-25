@@ -4,7 +4,7 @@
         <field name="name">quality.control.sale.form</field>
         <field name="model">quality.control.sale</field>
         <field name="arch" type="xml">
-            <form string="Product Set">
+            <form string="Sale QC">
                 <header>
 
                 </header>
@@ -26,19 +26,19 @@
                             <field name="test_person_id" domain="[('is_sale_person', '=', True)]" options='{"no_quick_create": True "no_create": True}'/>
                         </group>
                         <notebook>
-                        <page string="Quality Control Lines">
-                            <field name="qc_sale_line_ids">
-                                <list editable="bottom">
-                                    <field name="product_id" />
-                                    <field name="quantity" />
-                                    <field name="already_checked" />
-                                </list>
-                            </field>
-                        </page>
-                        <page string="QC Note" name="note">
-                            <field name="qc_note" string="QC Note" placeholder="Add a quality control note."/>
-                        </page>
-                    </notebook>
+                            <page string="Quality Control Lines">
+                                <field name="qc_sale_line_ids">
+                                    <list editable="bottom">
+                                        <field name="product_id" />
+                                        <field name="quantity" />
+                                        <field name="already_checked" column_invisible="True"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="QC Note" name="note">
+                                <field name="qc_note" string="QC Note" placeholder="Add a quality control note."/>
+                            </page>
+                        </notebook>
                     </group>
                 </sheet>
                 <chatter/>

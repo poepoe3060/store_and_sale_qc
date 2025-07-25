@@ -1,11 +1,11 @@
 
 {
-    'name': 'Quality Control',
-    'version': '1.1',
+    'name': 'Quality Control for Sale and Store Team',
+    'version': '1.0.0',
     'category': 'QC/QC',
     'summary': 'QC Management',
     'description': """
-    This module contains the quality control management.
+    This module contains the qc management.
     """,
     'depends':  ['base','sale', 'stock','account'],
     'data': [
@@ -17,5 +17,6 @@
     ],
 
     'installable': True,
-    'auto_install': False
+    'auto_install': False,
+    'license': 'LGPL-3',
 }
