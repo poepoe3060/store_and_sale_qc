@@ -2,6 +2,7 @@
 {
     'name': 'Quality Control for Sale and Store Team',
     'version': '1.0.0',
+    'author': 'Poe Poe, R&P'
     'category': 'QC/QC',
     'summary': 'QC Management',
     'description': """
