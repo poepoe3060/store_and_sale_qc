@@ -1,4 +1,3 @@
-n
 {
     'name': 'Quality Control for Sale and Store Team',
     'version': '1.0.0',
